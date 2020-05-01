@@ -3,7 +3,7 @@
     "name": "NovaJsMin",
     "vendor": "Vine Code Limited",
     "description": "Automatically minify JS files on save.",
-    "version": "0.2",
+    "version": "0.6",
     "categories": ["formatters"],
     "repository": "https://github.com/vinecode/NovaJsMin",
     "bugs": "https://github.com/vinecode/NovaJsMin/issues",        

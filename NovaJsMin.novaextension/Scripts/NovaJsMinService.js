@@ -41,9 +41,7 @@ class NovaJsMinService {
   */  
   
   minifyJsFile(source) {
-    
-    console.log("DO MINIFY FILE: " + source);
-    
+
     // Check this this is a javascript file and not already minimised
     if(source.substr(-2) != 'js' || source.substr(-6) == 'min.js') { return } 
 
@@ -55,7 +53,6 @@ class NovaJsMinService {
         args.push("--");
         args.push(source);        
  
-    //args = new Array('uglifyjs "' + source + '"');
     var options = { args: args };
      
      console.log(args.join(' '));
@@ -73,19 +70,30 @@ class NovaJsMinService {
      });
  
      process.onDidExit(function() {
-       
-       console.log('stdOut: ' + stdOut.join("\n"));
-       console.log('stdErr: ' + stdErr.join("\n"));       
-       
-       if(stdErr.length > 0) {         
+
+       if(stdErr.length > 0) {     
+         
+        if(nova._notificationTimer) {
+           clearTimeout(nova._notificationTimer);
+         }                
+             
          var message = stdErr.splice(0, 2).join("\n");
     
-         let request = new NotificationRequest("invalid-file");      
-         request.title = nova.localize("Sass Compile Error");
+         let request = new NotificationRequest("js-error");      
+         request.title = nova.localize("Javascript Compile Error");
          request.body = nova.localize(message);  
          request.actions = [nova.localize("Dismiss")];        
          let promise = nova.notifications.add(request);
-       } 
+         
+        // hide the notification after 5 seconds
+         nova._notificationTimer = setTimeout(function() { 
+           nova.notifications.cancel("js-error");         
+         }, 10000);         
+         
+       }  else {
+         // Hide any notifications of the previous error
+         nova.notifications.cancel("js-error");          
+       }
 
        
 
@@ -101,9 +109,13 @@ class NovaJsMinService {
   minifyJsFileOnSave(editor) {
     var source   = editor.document.path;
     
-    if(source.substr(-2) != 'js' || source.substr(-6) == 'min.js') { return }    
+    // If Auto Minify on save is enabled just return    
+    var minifyOnSave  = nova.config.get('VineCode.NovaJsMin.minifyOnSave');    
+    if(minifyOnSave == 'No') {
+      return;   
+    }    
     
-    console.log("minifyJsFileOnSave"); 
+    if(source.substr(-2) != 'js' || source.substr(-6) == 'min.js') { return }    
 
     this.minifyJsFile(source);
       
@@ -133,7 +145,7 @@ class NovaJsMinService {
     var minifyOnSave  = nova.config.get('VineCode.NovaJsMin.minifyOnSave');    
     
     // If Auto Minify on save is enabled just return
-    if(minifyOnSave == 'On') {
+    if(minifyOnSave == 'No') {
       return;   
     }
 
@@ -152,9 +164,7 @@ class NovaJsMinService {
     var source   = editor.document.path;
     
     if(source.slice((source.lastIndexOf(".") - 1 >>> 0) + 2) != 'js') { return }    
-    
-    
-        
+
     console.log("beautifyJsFile");
     
     // Save any unsaved changes
@@ -165,6 +175,73 @@ class NovaJsMinService {
       editor.save();
     }
     
+    var execPath  = nova.config.get('VineCode.NovaJsMin.execPath');       
+    
+    if(!execPath) {
+      execPath = 'uglifyjs';
+    }       
+    
+    var args = new Array;
+        args.push(execPath);
+        args.push("--beautify");
+        args.push("--comments");                
+        args.push("all");                
+        args.push("--output");
+        args.push(source);
+        args.push("--");
+        args.push(source);   
+        
+    console.log(args.join(" "));  
+    
+    var options = { args: args };
+        
+    console.log(args.join(' '));
+
+    var process = new Process("/usr/bin/env", options);
+    
+    var stdOut = new Array;
+    process.onStdout(function(line) {
+      stdOut.push(line.trim());
+    });
+    
+    var stdErr = new Array;
+    process.onStderr(function(line) {
+      stdErr.push(line.trim());
+    });
+
+    process.onDidExit(function() {
+      
+      console.log('stdOut: ' + stdOut.join("\n"));
+      console.log('stdErr: ' + stdErr.join("\n"));       
+      
+      if(stdErr.length > 0) {  
+        
+        if(nova._notificationTimer) {
+          clearTimeout(nova._notificationTimer);
+        }           
+              
+        var message = stdErr.splice(0, 2).join("\n");
+   
+        let request = new NotificationRequest("invalid-file");      
+        request.title = nova.localize(" Compile Error");
+        request.body = nova.localize(message);  
+        request.actions = [nova.localize("Dismiss")];        
+        let promise = nova.notifications.add(request);
+        
+        // hide the notification after 5 seconds
+        nova._notificationTimer = setTimeout(function() { 
+          nova.notifications.cancel("sass-error");         
+        }, 10000);
+
+      } else {
+        // Hide any notifications of the previous error
+        nova.notifications.cancel("sass-error");          
+      }
+
+    });
+
+    process.start();              
+
       console.log("DO: beautifyJsFile");
 
   } 
