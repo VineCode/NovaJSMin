@@ -4,7 +4,7 @@
 // Copyright © 2020 Vine Code Limited. All rights reserved.
 //
 
-class NovaJsMinService {
+class JsMinService {
   
 	constructor() {
 
@@ -12,13 +12,16 @@ class NovaJsMinService {
 
   get getArgs() {
     
-    var mangle  = nova.config.get('VineCode.NovaJsMin.mangle');
-    var sourceMap = nova.config.get('VineCode.NovaJsMin.sourceMap'); 
-    var execPath  = nova.config.get('VineCode.NovaJsMin.execPath');       
+    var mangle  = nova.config.get('VineCode.JsMin.mangle');
+    var sourceMap = nova.config.get('VineCode.JsMin.sourceMap'); 
+    var execPath  = nova.config.get('VineCode.JsMin.execPath');       
     
     if(!execPath) {
       execPath = 'uglifyjs';
     }            
+    
+    execPath = execPath.replace(/(\s+)/g, '\\$1');
+    
     var options = [];
     
     options.push(execPath);
@@ -54,10 +57,8 @@ class NovaJsMinService {
         args.push(source);        
  
     var options = { args: args };
-     
-     console.log(args.join(' '));
- 
-     var process = new Process("/usr/bin/env", options);
+
+    var process = new Process("/usr/bin/env", options);
      
      var stdOut = new Array;
      process.onStdout(function(line) {
@@ -110,7 +111,7 @@ class NovaJsMinService {
     var source   = editor.document.path;
     
     // If Auto Minify on save is enabled just return    
-    var minifyOnSave  = nova.config.get('VineCode.NovaJsMin.minifyOnSave');    
+    var minifyOnSave  = nova.config.get('VineCode.JsMin.minifyOnSave');    
     if(minifyOnSave == 'No') {
       return;   
     }    
@@ -142,7 +143,7 @@ class NovaJsMinService {
       return;
     }    
     
-    var minifyOnSave  = nova.config.get('VineCode.NovaJsMin.minifyOnSave');    
+    var minifyOnSave  = nova.config.get('VineCode.JsMin.minifyOnSave');    
     
     // If Auto Minify on save is enabled just return
     if(minifyOnSave == 'No') {
@@ -175,7 +176,7 @@ class NovaJsMinService {
       editor.save();
     }
     
-    var execPath  = nova.config.get('VineCode.NovaJsMin.execPath');       
+    var execPath  = nova.config.get('VineCode.JsMin.execPath');       
     
     if(!execPath) {
       execPath = 'uglifyjs';
@@ -248,4 +249,4 @@ class NovaJsMinService {
   
 }
 
-module.exports = NovaJsMinService;
+module.exports = JsMinService;

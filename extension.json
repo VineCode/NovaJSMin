@@ -1,12 +1,12 @@
 {
-    "identifier": "vinecode.NovaJsMin",
-    "name": "NovaJsMin",
-    "vendor": "Vine Code Limited",
+    "identifier": "vinecode.JsMin",
+    "name": "JsMin",
+    "organization": "Vine Code Limited",
     "description": "Automatically minify JS files on save.",
-    "version": "0.6",
+    "version": "0.7.1",
     "categories": ["formatters"],
-    "repository": "https://github.com/vinecode/NovaJsMin",
-    "bugs": "https://github.com/vinecode/NovaJsMin/issues",        
+    "repository": "https://github.com/vinecode/JsMin.novaextension",
+    "bugs": "https://github.com/vinecode/JsMin.novaextension/issues",        
     "main": "main.js",
     "entitlements": {
         "process": true
@@ -16,12 +16,12 @@
         "editor": [
             {
                 "title": "Minify JS",
-                "command": "NovaJsMin.minifyFile",
+                "command": "JsMin.minifyFile",
                 "when": "editorSyntax == 'javascript'"             
             },
             {
                 "title": "Beautify JS",
-                "command": "NovaJsMin.beautifyFile",
+                "command": "JsMin.beautifyFile",
                 "when": "editorSyntax == 'javascript'"             
             }            
         ]
@@ -29,7 +29,7 @@
     
     "config": [        
         {
-            "key": "VineCode.NovaJsMin.minifyOnSave",
+            "key": "VineCode.JsMin.minifyOnSave",
             "title": "Minify on Save",
             "description": "Automatically minify js files on save.",
             "type": "enum",
@@ -37,7 +37,7 @@
             "default": "Yes"               
         },
         {
-            "key": "VineCode.NovaJsMin.mangle",
+            "key": "VineCode.JsMin.mangle",
             "title": "Mangle",
             "description": "Mangle Names.",
             "type": "enum",
@@ -45,7 +45,7 @@
             "default": "Yes" 
         },
         {
-            "key": "VineCode.NovaJsMin.sourceMap",
+            "key": "VineCode.JsMin.sourceMap",
             "title": "Generate Source Map",
             "description": "Enable source map file generation",
             "type": "enum",
@@ -53,7 +53,7 @@
             "default": "Yes" 
         },
         {
-            "key": "VineCode.NovaJsMin.execPath",
+            "key": "VineCode.JsMin.execPath",
             "title": "Executable Path",
             "type": "path",
             "description": "Manually set the path for the sass executable.",

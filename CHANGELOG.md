@@ -1,5 +1,11 @@
 # ChangeLog
 
+## Version 0.7.1
+- Bug fix for exec path
+
+## Version 0.7
+- Icon Updates and internal restructure
+
 ## Version 0.6 
 - Updated README
 
