@@ -58,7 +58,7 @@ class JsMinService {
     var path_replace       = nova.workspace.config.get('VineCode.JsMin.replaceInPath');
     
     if( path_find && path_find.length && path_replace && path_replace.length )
-    {   // Paths much end in a / to avoid replacing a partial dir name (e.g., path/js could trigger replace on path/js_min)
+    {   // Paths must end in a / to avoid replacing a partial dir name (e.g., path/js could trigger replace on path/js_min)
         if( path_find.substr(-1) !== '/' )
            path_find += '/';
         if( path_replace.substr(-1) !== '/' )
