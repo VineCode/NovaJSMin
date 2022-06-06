@@ -4,6 +4,7 @@
 Run Code Run / Colin Foster (https://github.com/colinfoster) contributed the following updates:
 - Added: Configure the plugin on a project-by-project basis.
 - Added: Change the destination path of .min.js and .min.js.map files.
+- Bug Fix: Manual minify would not work if auto-minify was off.
 
 ## Version 0.7.1
 - Bug fix for exec path
