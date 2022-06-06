@@ -136,10 +136,10 @@ class JsMinService {
     var minifyOnSave  = nova.workspace.config.get('VineCode.JsMin.minifyOnSave');
     
     // If Auto Minify on save is enabled just return
-    if(minifyOnSave == 'No') {
+    if(minifyOnSave == 'Yes') {
       return;
     }
-
+    
     // Otherwise Trigger it here
     this.minifyJsFile(source);
     
