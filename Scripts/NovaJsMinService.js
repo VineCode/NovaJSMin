@@ -100,19 +100,11 @@ class JsMinService {
   */
   
   minifyJsFileOnSave(editor) {
-    var source   = editor.document.path;
-    
-    // If Auto Minify on save is enabled just return
+    // Only minify if Auto Minify on save is enabled.
     var minifyOnSave  = nova.workspace.config.get('VineCode.JsMin.minifyOnSave');
-    if(minifyOnSave == 'No') {
-      return;
-    }
     
-    if(source.substr(-2) != 'js' || source.substr(-6) == 'min.js') { return }
-
-    this.minifyJsFile(source);
-      
-    return;
+    if( minifyOnSave == 'Yes')
+      this.minifyJsFile( editor.document.path );
   }
 
   /*
@@ -130,17 +122,15 @@ class JsMinService {
     if(editor.document.isDirty) {
       console.log("Saving Changes");
       editor.save();
-      return;
+      
+      // If we are minifying-on-save, the line above will trigger minifying and we should return.
+      var minifyOnSave  = nova.workspace.config.get('VineCode.JsMin.minifyOnSave');
+    
+      if(minifyOnSave == 'Yes')
+        return;
     }
     
-    var minifyOnSave  = nova.workspace.config.get('VineCode.JsMin.minifyOnSave');
-    
-    // If Auto Minify on save is enabled just return
-    if(minifyOnSave == 'Yes') {
-      return;
-    }
-    
-    // Otherwise Trigger it here
+    // Otherwise we must trigger minifying the file manually.
     this.minifyJsFile(source);
     
     return;
@@ -211,11 +201,10 @@ class JsMinService {
       if( stdOut.length )
         console.log('stdOut: ' + stdOut.join("\n"));
       
-      if( stdErr.length )
-        console.log('stdErr: ' + stdErr.join("\n"));
-      
-      if(stdErr.length > 0) {
+      if( stdErr.length ){
         
+        console.log('stdErr: ' + stdErr.join("\n"));
+
         if(nova._notificationTimer) {
           clearTimeout(nova._notificationTimer);
         }
